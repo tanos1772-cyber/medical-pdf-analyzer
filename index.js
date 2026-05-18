@@ -1,4 +1,21 @@
 import { useState } from "react";
+      data: buffer,
+      disableWorker: true
+    }).promise;
+
+    let fullText = "";
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(i => i.str).join(" ") + "\n";
+    }
+
+    return fullText;
+  };
+
+  const analyze = (text) => {
+    return {
       short_term: /3개월|90일|최근/.test(text) && /입원|수술/.test(text),
       long_term: /5년/.test(text) && /입원|수술/.test(text),
       diseases: {
