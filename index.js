@@ -1,4 +1,17 @@
 import { useState } from "react";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = "";
+
+export default function Home() {
+  const [text, setText] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const extractTextFromPdf = async (file) => {
+    const buffer = await file.arrayBuffer();
+
+    const pdf = await pdfjsLib.getDocument({
       data: buffer,
       disableWorker: true
     }).promise;
@@ -13,7 +26,7 @@ import { useState } from "react";
 
     return fullText;
   };
-
+      
   const analyze = (text) => {
     return {
       short_term: /3개월|90일|최근/.test(text) && /입원|수술/.test(text),
@@ -39,8 +52,7 @@ import { useState } from "react";
 
     setLoading(false);
   };
-
-  return (
+ return (
     <div style={{ padding: 20, fontFamily: "Arial" }}>
       <h1>보험 심사용 PDF 분석기</h1>
 
